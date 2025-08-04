@@ -1,7 +1,8 @@
-from fastapi import FastAPI,Depends
+from fastapi import FastAPI,Depends,Response,Request
 from contextlib import asynccontextmanager
 from tasks.routes import router as tasks_routers
 from users.routes import router as users__routers
+from users.models import UserModel
 
 tags_metadata = [
     {
@@ -41,15 +42,34 @@ app.include_router(tasks_routers) # ,prefix="/api/v1"
 app.include_router(users__routers)
 
 
-from fastapi.security import HTTPBasic,HTTPBasicCredentials
+from auth.token_auth import get_authenticated_user
 
-security = HTTPBasic()
+@app.get("/private_token")
+def private_route(user = Depends(get_authenticated_user)):
+    print(user.username)
+    return {"message":"this is a private route"}
+
+##########################
+
+from auth.basic_auth import get_authenticated_user
 
 @app.get("/public")
 def public_route():
     return {"message":"this is a public route"}
 
 @app.get("/private")
-def private_route(credentials: HTTPBasicCredentials = Depends(security)):
-    print(credentials)
+def private_route(user: UserModel = Depends(get_authenticated_user)):
+    print(user)
     return {"message":"this is a private route"}
+
+
+
+@app.post("/set-cookie")
+def set_cookie(response: Response):
+    response.set_cookie(key="test", value="fake-cookie-session-value")
+    return {"message": "cookies set"}
+
+@app.get("/get-cookie")
+def get_cookie(request: Request):
+    print(request.cookies)
+    return {"message": "cookies set"}
