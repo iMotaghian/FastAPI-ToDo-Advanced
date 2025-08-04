@@ -31,3 +31,5 @@ alembic upgrade heads
 
 # 10. models schema: schemas.py
 
+# 11. update routers
+
