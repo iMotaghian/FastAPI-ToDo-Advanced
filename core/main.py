@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Depends
 from contextlib import asynccontextmanager
 from tasks.routes import router as tasks_routers
+from users.routes import router as users__routers
 
 tags_metadata = [
     {
@@ -37,3 +38,18 @@ app = FastAPI(
 )
 
 app.include_router(tasks_routers) # ,prefix="/api/v1"
+app.include_router(users__routers)
+
+
+from fastapi.security import HTTPBasic,HTTPBasicCredentials
+
+security = HTTPBasic()
+
+@app.get("/public")
+def public_route():
+    return {"message":"this is a public route"}
+
+@app.get("/private")
+def private_route(credentials: HTTPBasicCredentials = Depends(security)):
+    print(credentials)
+    return {"message":"this is a private route"}

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from core.database import get_db
 from typing import List
 
-router = APIRouter(tags=["tasks"],prefix="/todo") # show in docs
+router = APIRouter(tags=["tasks"])#,prefix="/todo") # show in docs
 
 @router.get("/tasks",response_model=List[TaskResponseSchema])
 async def retrieve_tasks_list(

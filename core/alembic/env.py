@@ -43,6 +43,7 @@ else:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from tasks.models import *
+from users.models import *
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
