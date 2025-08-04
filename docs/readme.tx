@@ -1,0 +1,11 @@
+# 1. env:
+python -m venv venv
+venv\Scripts\activate
+
+# 2. installing requirements
+pip install fastapi[all] alembic sqlalchemy
+pip freeze > requirements.txt
+
+# 3. setup alembic
+cd core
+alembic init alembic
