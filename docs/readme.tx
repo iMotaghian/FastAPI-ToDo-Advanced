@@ -29,3 +29,5 @@ target_metadata = Base.metadate
 alembic revision --autogenerate -m "task table"
 alembic upgrade heads
 
+# 10. models schema: schemas.py
+
