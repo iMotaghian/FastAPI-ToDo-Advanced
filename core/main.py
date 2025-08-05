@@ -1,7 +1,7 @@
 from fastapi import FastAPI,Depends,Response,Request
 from contextlib import asynccontextmanager
 from tasks.routes import router as tasks_routers
-from users.routes import router as users__routers
+from users.routes import router as users_routers
 from users.models import UserModel
 
 tags_metadata = [
@@ -39,28 +39,38 @@ app = FastAPI(
 )
 
 app.include_router(tasks_routers) # ,prefix="/api/v1"
-app.include_router(users__routers)
+app.include_router(users_routers)
 
+from auth.jwt_auth import get_authenticated_user
 
-from auth.token_auth import get_authenticated_user
-
-@app.get("/private_token")
+@app.get("/private_token_jwt")
 def private_route(user = Depends(get_authenticated_user)):
-    print(user.username)
+    print(user.id)
     return {"message":"this is a private route"}
-
-##########################
-
-from auth.basic_auth import get_authenticated_user
 
 @app.get("/public")
 def public_route():
     return {"message":"this is a public route"}
 
-@app.get("/private")
-def private_route(user: UserModel = Depends(get_authenticated_user)):
-    print(user)
-    return {"message":"this is a private route"}
+# from auth.token_auth import get_authenticated_user
+
+# @app.get("/private_token")
+# def private_route(user = Depends(get_authenticated_user)):
+#     print(user.username)
+#     return {"message":"this is a private route"}
+
+##########################
+
+# from auth.basic_auth import get_authenticated_user
+
+# @app.get("/public")
+# def public_route():
+#     return {"message":"this is a public route"}
+
+# @app.get("/private")
+# def private_route(user: UserModel = Depends(get_authenticated_user)):
+#     print(user)
+#     return {"message":"this is a private route"}
 
 
 

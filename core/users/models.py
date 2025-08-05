@@ -3,6 +3,7 @@ from core.database import Base
 from sqlalchemy.orm import relationship
 from passlib.context import CryptContext
 
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class UserModel(Base):
@@ -40,3 +41,5 @@ class TokenModel(Base):
     
     
     user = relationship("UserModel",uselist=False)
+    
+    

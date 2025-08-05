@@ -33,3 +33,8 @@ alembic upgrade heads
 
 # 11. update routers
 
+
+#########
+test
+pip install pytest
+# def test_... and file test_....py
