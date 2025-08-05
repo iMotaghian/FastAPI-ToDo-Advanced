@@ -1,8 +1,11 @@
-from fastapi import FastAPI,Depends,Response,Request
+from fastapi import FastAPI,Depends,Response,Request,BackgroundTasks
 from contextlib import asynccontextmanager
 from tasks.routes import router as tasks_routers
 from users.routes import router as users_routers
 from users.models import UserModel
+import time
+import random
+from fastapi.responses import JSONResponse
 
 tags_metadata = [
     {
@@ -83,3 +86,21 @@ def set_cookie(response: Response):
 def get_cookie(request: Request):
     print(request.cookies)
     return {"message": "cookies set"}
+
+
+# background task handling
+
+def start_task(task_id):
+    print(f"doing the process: {task_id}")
+    time.sleep(random.randint(3,10))
+    print(f"finished task {task_id}")
+
+
+@app.get("/initiate-task", status_code=200)
+async def initiate_task(background_tasks: BackgroundTasks):
+    background_tasks.add_task(start_task,task_id=random.randint(1,100))
+    return JSONResponse(content={"detail":"task is done"})
+
+@app.get("/is_ready", status_code=200)
+async def readiness():
+    return JSONResponse(content="ok")

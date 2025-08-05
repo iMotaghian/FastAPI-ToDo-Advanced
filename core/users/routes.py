@@ -19,9 +19,9 @@ def generate_token(length=32):
 async def user_login(request:UserLoginSchema,db:Session = Depends(get_db)):
     user_obj = db.query(UserModel).filter_by(username=request.username.lower()).first()
     if not user_obj:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="username not found")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="invalid username or password")
     if not user_obj.verify_password(request.password):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="wrong password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="invalid username or password")
     # Token based authenticated
     # token_obj = TokenModel(user_id = user_obj.id, token=generate_token())
     # db.add(token_obj)
@@ -40,7 +40,7 @@ async def user_register(request:UserRegisterSchema,db:Session = Depends(get_db))
     user_obj.set_password(request.password)
     db.add(user_obj)
     db.commit()
-    return JSONResponse(content={"details":"user created"})
+    return JSONResponse(status_code=status.HTTP_201_CREATED,content={"detail": "user registered successfully"})
 
 
 @router.post("/refresh-token")

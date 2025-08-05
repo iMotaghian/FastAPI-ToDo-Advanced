@@ -38,3 +38,4 @@ alembic upgrade heads
 test
 pip install pytest
 # def test_... and file test_....py
+pytest
