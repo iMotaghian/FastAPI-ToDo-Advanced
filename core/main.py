@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Depends,Response,Request,BackgroundTasks
+from fastapi import FastAPI,Depends,Response,Request,BackgroundTasks,Request
 from contextlib import asynccontextmanager
 from tasks.routes import router as tasks_routers
 from users.routes import router as users_routers
@@ -7,6 +7,7 @@ import time
 import random
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+import time
 
 
 
@@ -167,3 +168,11 @@ app.add_middleware(
     allow_methods=["*"],   # Allows all methods
     allow_headers=["*"],   # Allows all headers
 )
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.perf_counter()
+    response = await call_next(request)
+    process_time = time.perf_counter() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
