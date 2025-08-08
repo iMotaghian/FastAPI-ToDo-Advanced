@@ -6,6 +6,10 @@ from users.models import UserModel
 import time
 import random
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+
+
+
 
 tags_metadata = [
     {
@@ -143,3 +147,23 @@ async def fetch_current_weather(latitude: float = 40.7128, longitude: float = -7
         return JSONResponse(content={"current_weather": current_weather})
     else:
         return JSONResponse(content={"detail": "Failed to fetch weather"}, status_code=500)
+    
+    
+    
+# A list of specific origins that are allowed to make cross-origin requests.
+origins = {
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",  # docs/sample login
+}
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  
+    allow_credentials=True,
+    allow_methods=["*"],   # Allows all methods
+    allow_headers=["*"],   # Allows all headers
+)
