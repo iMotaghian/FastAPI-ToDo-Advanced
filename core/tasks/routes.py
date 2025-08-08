@@ -14,7 +14,7 @@ router = APIRouter(tags=["tasks"])#,prefix="/todo") # show in docs
 @router.get("/tasks",response_model=List[TaskResponseSchema])
 async def retrieve_tasks_list(
     completed : bool = Query(None,description="filter task based in completed or not"),
-    limit: int = Query(10,gt=0,le=50,description="limiting the number of items to retrive"),
+    limit: int = Query(10,gt=0,le=50,description="limiting the number of items to retrieve"),
     offset: int = Query(0,ge=0,description="use for pagination base on passed items"),
     db: Session = Depends(get_db),
     user: UserModel = Depends(get_authenticated_user),
